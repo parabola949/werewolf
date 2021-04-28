@@ -13,7 +13,7 @@ namespace Werewolf_Node.Helpers
     public static class ImageHelper
     {
         internal static string ImagePath = @"c:\inetpub\werewolf\Images\";
-        public static async void GetUserImage(int userid)
+        public static async void GetUserImage(long userid)
         {
             using (var db = new WWContext())
             {
@@ -22,7 +22,7 @@ namespace Werewolf_Node.Helpers
                 {
                     try
                     {
-                        var photos = await Program.Bot.GetUserProfilePhotosAsync(userid, limit: 1);
+                        var photos = await Program.Bot.GetUserProfilePhotosAsync((int)userid, limit: 1); // APIV5 CAST
                         if (photos.Photos.Length == 0) return;//nada
                         var sizes = photos.Photos[0];
                         var id = "";

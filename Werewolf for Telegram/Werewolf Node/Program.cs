@@ -41,7 +41,7 @@ namespace Werewolf_Node
         internal static bool SendGifIds = false;
         internal static int CommandsReceived = 0;
         internal static int GamesStarted = 0;
-        internal static int Para = 129046388;
+        internal static long Para = 129046388;
         internal static long ErrorGroup = -1001098399855;
         internal static int DupGamesKilled = 0;
         internal static int TotalPlayers = 0;
@@ -278,7 +278,7 @@ namespace Werewolf_Node
                                     Guid = g.Guid,
                                     Cycle = g.Time,
                                     State = g.IsRunning ? GameState.Running : g.IsJoining ? GameState.Joining : GameState.Dead,
-                                    Users = new HashSet<int>(g.Players?.Where(x => !x.IsDead)?.Select(x => x.TeleUser.Id)??new[]{0}),
+                                    Users = new HashSet<long>(g.Players?.Where(x => !x.IsDead)?.Select(x => (long)x.TeleUser.Id)??new long[]{0}), // APIV5 CAST but the other way round, lol
                                     Players = g.Players?.Select(x => new 
                                     {
                                         Bitten = x.Bitten?"Yes":"No",
@@ -501,7 +501,7 @@ namespace Werewolf_Node
                             NodeId = ClientId,
                             Guid = g.Guid,
                             State = g.IsRunning ? GameState.Running : g.IsJoining ? GameState.Joining : GameState.Dead,
-                            Users = g.Players != null ? new HashSet<int>(g.Players.Where(x => !x.IsDead).Select(x => x.TeleUser.Id)) : new HashSet<int>(),
+                            Users = g.Players != null ? new HashSet<long>(g.Players.Where(x => !x.IsDead).Select(x => (long)x.TeleUser.Id)) : new HashSet<long>(), // APIV5 CAST but the other way round, lol
                             PlayerCount = g.Players?.Count ?? 0
                             //Players = new HashSet<IPlayer>(g.Players)
                         };

@@ -26,12 +26,9 @@ namespace Werewolf_Control.Handler
 {
     internal static class UpdateHandler
     {
-        internal static Dictionary<int, SpamDetector> UserMessages = new Dictionary<int, SpamDetector>();
+        internal static Dictionary<long, SpamDetector> UserMessages = new Dictionary<long, SpamDetector>();
 
-        internal static HashSet<int> SpamBanList = new HashSet<int>
-        {
-
-        };
+        internal static HashSet<long> SpamBanList = new HashSet<long>();
         internal static List<GlobalBan> BanList = new List<GlobalBan>();
 
         internal static bool SendGifIds = false;
@@ -41,7 +38,7 @@ namespace Werewolf_Control.Handler
             new Task(() => { HandleUpdate(e.Update); }).Start();
         }
 
-        private static bool AddCount(int id, Message m)
+        private static bool AddCount(long id, Message m)
         {
             try
             {
@@ -101,7 +98,7 @@ namespace Werewolf_Control.Handler
                             {
                                 BannedBy = "Moderator",
                                 Expires = expireTime,
-                                TelegramId = id,
+                                TelegramId = (int)id, // APIV5 CAST
                                 Reason = "Spam / Flood",
                                 BanDate = DateTime.UtcNow,
                                 Name = name
@@ -851,7 +848,7 @@ namespace Werewolf_Control.Handler
                             Player by;
                             string json;
                             //get player target
-                            var pid = int.Parse(args[1]);
+                            var pid = long.Parse(args[1]);
                             var tplayer = DB.Players.FirstOrDefault(x => x.TelegramId == pid);
                             switch (args[0])
                             {
@@ -1090,7 +1087,7 @@ namespace Werewolf_Control.Handler
                             return;
                         case "ohai":
                             //update ohaider achievement
-                            var userid = int.Parse(args[2]);
+                            var userid = long.Parse(args[2]);
                             try
                             {
                                 using (var db = new WWContext())
@@ -1145,9 +1142,9 @@ namespace Werewolf_Control.Handler
                             }
                             return;
                         case "restore":
-                            var oldid = int.Parse(args[1]);
-                            var newid = int.Parse(args[2]);
-                            var result = DB.RestoreAccount(oldid, newid);
+                            var oldid = long.Parse(args[1]);
+                            var newid = long.Parse(args[2]);
+                            var result = DB.RestoreAccount((int)oldid, (int)newid); // APIV5 CAST
                             using (var db = new WWContext())
                             {
                                 var oldPlayer = db.Players.FirstOrDefault(x => x.TelegramId == oldid);

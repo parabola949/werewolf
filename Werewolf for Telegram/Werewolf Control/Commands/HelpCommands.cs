@@ -31,7 +31,7 @@ namespace Werewolf_Control
 //#endif
         }
 
-        public static void GroupList(long chatId, int fromId, int messageId = 0)
+        public static void GroupList(long chatId, long fromId, int messageId = 0)
         {
             //new method, fun times....
             //now determine what languages are available in public groups.

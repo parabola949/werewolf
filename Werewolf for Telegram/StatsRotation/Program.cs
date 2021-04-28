@@ -56,7 +56,7 @@ namespace StatsRotation
                     //    //Thread.Sleep(500);
                     //}
                     ////players
-                    //List<int> playerids;
+                    //List<long> playerids;
                     //using (var db = new WWContext())
                     //{
                     //    playerids = db.Players.Select(x => x.Id).ToList();
@@ -236,7 +236,7 @@ namespace StatsRotation
             }
         }
 
-        static void PlayerStats(int playerid)
+        static void PlayerStats(long playerid)
         {
             try
             {

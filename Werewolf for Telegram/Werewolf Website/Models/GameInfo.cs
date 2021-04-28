@@ -10,7 +10,7 @@ namespace Werewolf_Website.Models
 {
     public class GameInfo
     {
-        public HashSet<int> Users { get; set; } = new HashSet<int>();
+        public HashSet<long> Users { get; set; } = new HashSet<long>();
         public long GroupId { get; set; }
         public string Language { get; set; }
         public string ChatGroup { get; set; }

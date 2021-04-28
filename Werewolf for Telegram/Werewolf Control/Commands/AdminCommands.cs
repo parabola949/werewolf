@@ -58,7 +58,7 @@ namespace Werewolf_Control
                 }
             }
 
-            if (int.TryParse(args[1], out int did))
+            if (long.TryParse(args[1], out long did))
                 Bot.GetGroupNodeAndGame(u.Message.Chat.Id)?.SmitePlayer(did);
 
         }
@@ -221,10 +221,10 @@ namespace Werewolf_Control
         public static void GetIdles(Update update, string[] args)
         {
             //check user ids and such
-            List<int> ids = new List<int>();
+            List<long> ids = new List<long>();
             foreach (var arg in args.Skip(1).FirstOrDefault()?.Split(' ') ?? new[] { "" })
             {
-                if (int.TryParse(arg, out int id))
+                if (long.TryParse(arg, out long id))
                 {
                     ids.Add(id);
                 }
@@ -247,13 +247,13 @@ namespace Werewolf_Control
             {
                 foreach (var id in ids)
                 {
-                    var idles = db.GetIdleKills24Hours(id).FirstOrDefault() ?? 0;
-                    var groupidles = db.GetGroupIdleKills24Hours(id, update.Message.Chat.Id).FirstOrDefault() ?? 0;
+                    var idles = db.GetIdleKills24Hours((int)id).FirstOrDefault() ?? 0; // APIV5 CAST
+                    var groupidles = db.GetGroupIdleKills24Hours((int)id, update.Message.Chat.Id).FirstOrDefault() ?? 0; // APIV5 CAST
                     //get the user
                     ChatMember user = null;
                     try
                     {
-                        user = Bot.Api.GetChatMemberAsync(update.Message.Chat.Id, id).Result;
+                        user = Bot.Api.GetChatMemberAsync(update.Message.Chat.Id, (int)id).Result; // APIV5 CAST
                     }
                     catch
                     {
@@ -490,9 +490,9 @@ namespace Werewolf_Control
 #if !BETA
             var score = 100;
             var result = "";
-            int oldid, newid;
+            long oldid, newid;
             var param = args[1].Split(' ');
-            if (!int.TryParse(param[0], out oldid) || !int.TryParse(param[1], out newid))
+            if (!long.TryParse(param[0], out oldid) || !long.TryParse(param[1], out newid))
             {
                 //fail
                 Send("usage: /restore <oldid> <newid>", u.Message.Chat.Id);
@@ -597,7 +597,7 @@ namespace Werewolf_Control
                 }
                 else
                 {
-                    var pid = int.Parse(args[1]);
+                    var pid = long.Parse(args[1]);
                     var p = db.Players.FirstOrDefault(x => x.TelegramId == pid);
                     if (p == null)
                     {
@@ -744,7 +744,7 @@ namespace Werewolf_Control
                         Send("Please use /approvegifs <player id> <1|0 (nsfw)>", u.Message.Chat.Id);
                         return;
                     }
-                    var pid = int.Parse(parms[0]);
+                    var pid = long.Parse(parms[0]);
                     var nsfw = parms[1] == "1";
                     var p = db.Players.FirstOrDefault(x => x.TelegramId == pid);
                     if (p == null)
@@ -800,7 +800,7 @@ namespace Werewolf_Control
                         Send("Please use /disapprovegifs <player id> <reason>", u.Message.Chat.Id);
                         return;
                     }
-                    var pid = int.Parse(parms[0]);
+                    var pid = long.Parse(parms[0]);
                     var reason = args[1].Replace(parms[0] + " ", "");
                     var p = db.Players.FirstOrDefault(x => x.TelegramId == pid);
                     if (p == null)
@@ -839,7 +839,7 @@ namespace Werewolf_Control
 #if !BETA
             string Prefix = "https://tgwerewolf.com/gifs/";
             List<string> FileIds = new List<string>();
-            List<int> UserIds = new List<int>();
+            List<long> UserIds = new List<long>();
 
             if (u.Message.ReplyToMessage != null)
             {
@@ -870,7 +870,7 @@ namespace Werewolf_Control
 
             if (args.Length > 1 && !string.IsNullOrEmpty(args[1]))
             {
-                if (int.TryParse(args[1], out int id))
+                if (long.TryParse(args[1], out long id))
                 {
                     UserIds.Add(id);
                 }
@@ -881,7 +881,7 @@ namespace Werewolf_Control
             {
                 using (var db = new WWContext())
                 {
-                    foreach (int userid in UserIds)
+                    foreach (var userid in UserIds)
                     {
                         var p = db.Players.FirstOrDefault(x => x.TelegramId == userid);
                         if (p != null && p.CustomGifSet != null)

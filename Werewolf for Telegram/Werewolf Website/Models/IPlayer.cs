@@ -22,9 +22,9 @@ namespace Werewolf_Node.Models
         /// <summary>
         /// Choice of the player they want to use their ability on
         /// </summary>
-        public int Choice { get; set; } = 0;
+        public long Choice { get; set; } = 0;
 
-        public int Choice2 { get; set; } = 0;
+        public long Choice2 { get; set; } = 0;
 
         /// <summary>
         /// Whooops! you died...
@@ -66,7 +66,7 @@ namespace Werewolf_Node.Models
         public bool HasNightAction { get; set; } = false;
         public bool HasDayAction { get; set; } = false;
         public int DayCult { get; set; } = 0;
-        public int RoleModel { get; set; } = 0;
+        public long RoleModel { get; set; } = 0;
         public IRole KilledByRole { get; set; }
         public bool DiedByVisitingKiller { get; set; } = false;
         public bool DiedByVisitingVictim { get; set; } = false;
@@ -75,7 +75,7 @@ namespace Werewolf_Node.Models
         public string Name { get; set; }
         public IRole OriginalRole { get; set; }
         public bool InLove { get; set; } = false;
-        public int LoverId { get; set; } = 0;
+        public long LoverId { get; set; } = 0;
         public int DBPlayerId { get; set; } = 0;
         public int DBGamePlayerId { get; set; } = 0;
         public DateTime TimeDied { get; set; } = DateTime.MaxValue;
@@ -83,7 +83,7 @@ namespace Werewolf_Node.Models
         public string Language { get; set; } = "English";
         public bool Won { get; set; } = false;
 
-        public int Id;
+        public long Id;
 
         public QuestionAsked CurrentQuestion { get; set; }
 
@@ -93,7 +93,7 @@ namespace Werewolf_Node.Models
         public bool HasBeenVoted { get; set; } = false;
         public bool HasStayedHome { get; set; } = false;
         public bool HasRepeatedVisit { get; set; } = false;
-        public HashSet<int> PlayersVisited { get; set; } = new HashSet<int>();
+        public HashSet<long> PlayersVisited { get; set; } = new HashSet<long>();
         public int ChangedRolesCount { get; set; } = 0;
         public int FirstToLynchCount { get; set; } = 0;
         public bool BulletHitVillager { get; set; } = false;
@@ -104,7 +104,7 @@ namespace Werewolf_Node.Models
         public bool LastShotWasSKWolf { get; set; } = false;
         public bool DoubleKillEnding { get; set; } = false;
         public bool Bitten { get; set; }
-        public List<int> CorrectSnooped { get; set; } = new List<int>();
+        public List<long> CorrectSnooped { get; set; } = new List<long>();
         public bool SpeedDating { get; set; } = false;
         public int FirstStone { get; set; } = 0;
         public int CHHuntedCultCount { get; set; } = 0;

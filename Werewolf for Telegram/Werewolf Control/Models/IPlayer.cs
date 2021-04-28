@@ -13,7 +13,7 @@ namespace Werewolf_Control.Models
         /// <summary>
         /// Choice of the player they want to use their ability on
         /// </summary>
-        public int Choice { get; set; } = 0;
+        public long Choice { get; set; } = 0;
 
         /// <summary>
         /// Whooops! you died...
@@ -48,7 +48,7 @@ namespace Werewolf_Control.Models
         public bool Fled { get; set; } = false;
         public ITeam Team { get; set; } = ITeam.Village;
         public int DayCult { get; set; } = 0;
-        public int RoleModel { get; set; } = 0;
+        public long RoleModel { get; set; } = 0;
         public bool DiedFromWolf { get; set; } = false;
         public bool DiedFromKiller { get; set; } = false;
         public bool DiedFromHunter { get; set; } = false;
@@ -56,11 +56,11 @@ namespace Werewolf_Control.Models
         public string Name { get; set; }
         public IRole OriginalRole { get; set; }
         public bool InLove { get; set; } = false;
-        public int LoverId { get; set; } = 0;
+        public long LoverId { get; set; } = 0;
         public int DBPlayerId { get; set; } = 0;
         public int DBGamePlayerId { get; set; } = 0;
         public DateTime TimeDied { get; set; } = DateTime.MaxValue;
-        public int Id { get; set; }
+        public long Id { get; set; }
     }
 
     public enum ITeam

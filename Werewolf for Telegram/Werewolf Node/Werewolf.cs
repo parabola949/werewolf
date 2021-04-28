@@ -585,7 +585,7 @@ namespace Werewolf_Node
                         var dbp = db.Players.FirstOrDefault(x => x.TelegramId == p.Id);
                         if (dbp == null)
                         {
-                            dbp = new Player { TelegramId = p.Id, Language = Language };
+                            dbp = new Player { TelegramId = (int)p.Id, Language = Language }; // APIV5 CAST
                             db.Players.Add(dbp);
                         }
                         dbp.Name = p.Name;
@@ -992,9 +992,9 @@ namespace Werewolf_Node
 
 
                 if (qtype == QuestionType.Kill2 && player.CurrentQuestion.QType == QuestionType.Kill2)
-                    player.Choice2 = int.Parse(choice);
+                    player.Choice2 = long.Parse(choice);
                 else if (qtype == player.CurrentQuestion.QType)
-                    player.Choice = int.Parse(choice);
+                    player.Choice = long.Parse(choice);
 
                 if (qtype == QuestionType.Lynch && player.PlayerRole == IRole.ClumsyGuy && player.CurrentQuestion.QType == QuestionType.Lynch)
                 {
@@ -1955,7 +1955,7 @@ namespace Werewolf_Node
         /// <param name="bullet">new bullet count of player, or null if it shouldn't change</param>
         /// <param name="hasUsedAbility">new HasUsedAbility value of player, or null if it shouldn't change</param>
         /// <param name="roleModel">The role model of the player to transform if they were DG or WC, or the old seer if they were apprentice, or the victim if they were thief</param>
-        private void Transform(IPlayer p, IRole toRole, TransformationMethod method, int newRoleModel = 0, IEnumerable<IPlayer> newTeamMembers = null, int? bullet = null, bool? hasUsedAbility = null, IPlayer roleModel = null, IEnumerable<IPlayer> oldTeamMates = null)
+        private void Transform(IPlayer p, IRole toRole, TransformationMethod method, long newRoleModel = 0, IEnumerable<IPlayer> newTeamMembers = null, int? bullet = null, bool? hasUsedAbility = null, IPlayer roleModel = null, IEnumerable<IPlayer> oldTeamMates = null)
         {
             if (p.IsDead)
             {
@@ -2665,8 +2665,8 @@ namespace Werewolf_Node
                         {
                             using (var db = new WWContext())
                             {
-                                idles24 = db.GetIdleKills24Hours(p.Id).FirstOrDefault() ?? 0;
-                                groupIdles24 = db.GetGroupIdleKills24Hours(p.Id, ChatId).FirstOrDefault() ?? 0;
+                                idles24 = db.GetIdleKills24Hours((int)p.Id).FirstOrDefault() ?? 0; // APIV5 CAST
+                                groupIdles24 = db.GetGroupIdleKills24Hours((int)p.Id, ChatId).FirstOrDefault() ?? 0; // APIV5 CAST
                             }
                         }
                         catch
@@ -3231,7 +3231,7 @@ namespace Werewolf_Node
             {
                 var votechoice = voteWolves.Where(x => (x.Choice != 0 && x.Choice != -1) || (x.Choice2 != 0 && x.Choice2 != -1));
 
-                List<int> choices = new List<int>();
+                List<long> choices = new List<long>();
 
                 //choice1
                 foreach (var w in votechoice)
@@ -3576,7 +3576,7 @@ namespace Werewolf_Node
             if (voteCult.Any())
             {
                 var votechoice = voteCult.Where(x => x.Choice != 0 && x.Choice != -1);
-                int choice = 0;
+                long choice = 0;
                 if (votechoice.Any())
                 {
                     choice = votechoice.GroupBy(x => x.Choice).OrderByDescending(x => x.Count()).First().Key;
@@ -5289,7 +5289,7 @@ namespace Werewolf_Node
                 Thread.Sleep(500);
             }
         }
-        public void FleePlayer(int banid)
+        public void FleePlayer(long banid)
         {
             if (IsInitializing)
             {
@@ -5437,7 +5437,7 @@ namespace Werewolf_Node
             Night
         }
 
-        private int ChooseRandomPlayerId(IPlayer exclude, bool all = true)
+        private long ChooseRandomPlayerId(IPlayer exclude, bool all = true)
         {
             try
             {
@@ -5457,21 +5457,6 @@ namespace Werewolf_Node
                 return -1;
             }
         }
-
-        //private int ChooseRandomPlayerId(IEnumerable<IPlayer> exclude)
-        //{
-        //    try
-        //    {
-        //        var possible = Players.Where(x => exclude.All(y => y?.TeleUser.Id != x?.TeleUser.Id)).ToList();
-        //        possible.Shuffle();
-        //        possible.Shuffle();
-        //        return possible[0].Id;
-        //    }
-        //    catch
-        //    {
-        //        return -1;
-        //    }
-        //}
 
         internal static void ReplyToCallback(CallbackQuery query, string text = null, bool edit = true, bool showAlert = false, InlineKeyboardMarkup replyMarkup = null)
         {

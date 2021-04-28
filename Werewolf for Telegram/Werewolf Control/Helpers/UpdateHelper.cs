@@ -13,7 +13,7 @@ namespace Werewolf_Control.Helpers
     {
         public static readonly MemoryCache AdminCache = new MemoryCache("GroupAdmins");
 
-        internal static int[] Devs =
+        internal static long[] Devs =
         {
             129046388,  //Para
             133748469,  //reny
@@ -22,7 +22,7 @@ namespace Werewolf_Control.Helpers
             106665913,  //Jeff
         };
 
-        internal static int[] LangAdmins =
+        internal static long[] LangAdmins =
         {
             267376056,  //Florian
             654995039,  //Cordarion
@@ -33,7 +33,7 @@ namespace Werewolf_Control.Helpers
             return IsGroupAdmin(update.Message.From.Id, update.Message.Chat.Id);
         }
 
-        internal static bool IsGlobalAdmin(int id)
+        internal static bool IsGlobalAdmin(long id)
         {
             using (var db = new Database.WWContext())
             {
@@ -41,15 +41,15 @@ namespace Werewolf_Control.Helpers
             }
         }
 
-        internal static bool IsLangAdmin(int id)
+        internal static bool IsLangAdmin(long id)
         {
             return LangAdmins.Contains(id);
         }
 
-        internal static bool IsGroupAdmin(int user, long group)
+        internal static bool IsGroupAdmin(long user, long group)
         {
             string itemIndex = $"{group}";
-            if (!(AdminCache[itemIndex] is List<int> admins))
+            if (!(AdminCache[itemIndex] is List<long> admins))
             {
                 CacheItemPolicy policy = new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddHours(1) };
 
@@ -70,7 +70,7 @@ namespace Werewolf_Control.Helpers
                         return true;
                     }
                     var t = Bot.Api.GetChatAdministratorsAsync(group).Result;
-                    admins = t.Where(x => !string.IsNullOrEmpty(x.User.FirstName)).Select(x => x.User.Id).ToList(); // if their first name is empty, the account is deleted
+                    admins = t.Where(x => !string.IsNullOrEmpty(x.User.FirstName)).Select(x => (long)x.User.Id).ToList(); // if their first name is empty, the account is deleted // APIV5 CAST but the other way round, lol
                     AdminCache.Set(itemIndex, admins, policy); // Write admin list into cache
                 }
                 catch

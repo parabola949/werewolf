@@ -33,7 +33,7 @@ namespace Werewolf_Control
             };
 #endif
 
-        private static Player GetDBPlayer(int id, WWContext db)
+        private static Player GetDBPlayer(long id, WWContext db)
         {
             return db.Players.FirstOrDefault(x => x.TelegramId == id);
         }
@@ -238,7 +238,7 @@ namespace Werewolf_Control
                 customMenu: new InlineKeyboardMarkup(new[] {button}));
         }
 
-        private static Node GetPlayerNode(int id)
+        private static Node GetPlayerNode(long id)
         {
             var node = Bot.Nodes.ToList().FirstOrDefault(n => n.Games.Any(g => g.Users.Contains(id)));
             if (node == null)
@@ -259,9 +259,9 @@ namespace Werewolf_Control
         }
 
         /// <summary>
-        /// Gets the language for the group, defaulting to English
+        /// Gets the language for the group or player, defaulting to English
         /// </summary>
-        /// <param name="id">The ID of the group</param>
+        /// <param name="id">The ID of the group or player</param>
         /// <returns></returns>
         public static string GetLanguage(long id)
         {
@@ -277,25 +277,6 @@ namespace Werewolf_Control
                     db.SaveChanges();
                 }
                 return grp?.Language ?? p?.Language ?? "English";
-            }
-        }
-
-        /// <summary>
-        /// Get language for a player
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public static string GetLanguage(int id)
-        {
-            using (var db = new WWContext())
-            {
-                var p = db.Players.FirstOrDefault(x => x.TelegramId == id);
-                if (String.IsNullOrEmpty(p?.Language) && p != null)
-                {
-                    p.Language = "English";
-                    db.SaveChanges();
-                }
-                return p?.Language ?? "English";
             }
         }
 
@@ -340,29 +321,29 @@ namespace Werewolf_Control
             return String.Format(selected.Value.FormatHTML(), args).Replace("\\n", Environment.NewLine);
         }
 
-        public static void KickChatMember(long chatid, int userid)
+        public static void KickChatMember(long chatid, long userid)
         {
-            var status = Bot.Api.GetChatMemberAsync(chatid, userid).Result.Status;
+            var status = Bot.Api.GetChatMemberAsync(chatid, (int)userid).Result.Status; // APIV5 CAST
 
             if (status == ChatMemberStatus.Administrator) //ignore admins
                 return;
             //kick
-            Bot.Api.KickChatMemberAsync(chatid, userid);
+            Bot.Api.KickChatMemberAsync(chatid, (int)userid); // APIV5 CAST
             //get their status
-            status = Bot.Api.GetChatMemberAsync(chatid, userid).Result.Status;
+            status = Bot.Api.GetChatMemberAsync(chatid, (int)userid).Result.Status; // APIV5 CAST
             while (status == ChatMemberStatus.Member) //loop
             {
                 //wait for database to report status is kicked.
-                status = Bot.Api.GetChatMemberAsync(chatid, userid).Result.Status;
+                status = Bot.Api.GetChatMemberAsync(chatid, (int)userid).Result.Status; // APIV5 CAST
                 Thread.Sleep(500);
             }
             //status is now kicked (as it should be)
             
             while (status != ChatMemberStatus.Left) //unban until status is left
             {
-                Bot.Api.UnbanChatMemberAsync(chatid, userid);
+                Bot.Api.UnbanChatMemberAsync(chatid, (int)userid); // APIV5 CAST
                 Thread.Sleep(500);
-                status = Bot.Api.GetChatMemberAsync(chatid, userid).Result.Status;
+                status = Bot.Api.GetChatMemberAsync(chatid, (int)userid).Result.Status; // APIV5 CAST
             }
             //yay unbanned
             

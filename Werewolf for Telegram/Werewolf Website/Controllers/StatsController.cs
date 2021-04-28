@@ -35,7 +35,7 @@ namespace Werewolf_Web.Controllers
             return View();
         }
 
-        public ActionResult Player(int id, bool json = false)
+        public ActionResult Player(long id, bool json = false)
         {
             if (json)
             {
@@ -223,7 +223,7 @@ namespace Werewolf_Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult PlayerStats(int pid, bool json = false)
+        public JsonResult PlayerStats(long pid, bool json = false)
         {
             using (var DB = new WWContext())
             {
@@ -236,9 +236,9 @@ namespace Werewolf_Web.Controllers
                 var won = p.GamePlayers.Count(x => x.Won);
                 var lost = gamesPlayed - won;
                 var survived = p.GamePlayers.Count(x => x.Survived);
-                var roleInfo = DB.PlayerRoles(pid).ToList();
-                var killed = DB.PlayerMostKilled(pid).FirstOrDefault();
-                var killedby = DB.PlayerMostKilledBy(pid).FirstOrDefault();
+                var roleInfo = DB.PlayerRoles((int)pid).ToList(); // APIV5 CAST
+                var killed = DB.PlayerMostKilled((int)pid).FirstOrDefault(); // APIV5 CAST
+                var killedby = DB.PlayerMostKilledBy((int)pid).FirstOrDefault(); // APIV5 CAST
                 var killedlink = killed != null ? $"<a href='../Player/{killed.TelegramId}'>{killed.Name}</a>" : "No kills?";
                 var killedbylink = killedby != null ? $"<a href='../Player/{killedby.TelegramId}'>{killedby.Name}</a>" : "Not killed?";
                 if (!json)
@@ -274,7 +274,7 @@ namespace Werewolf_Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult PlayerKills(int pid, bool json = false)
+        public JsonResult PlayerKills(long pid, bool json = false)
         {
             using (var DB = new WWContext())
             {
@@ -303,7 +303,7 @@ namespace Werewolf_Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult PlayerKilledBy(int pid, bool json = false)
+        public JsonResult PlayerKilledBy(long pid, bool json = false)
         {
             using (var DB = new WWContext())
             {
@@ -332,7 +332,7 @@ namespace Werewolf_Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult PlayerDeaths(int pid, bool json = false)
+        public JsonResult PlayerDeaths(long pid, bool json = false)
         {
             using (var DB = new WWContext())
             {
@@ -377,7 +377,7 @@ namespace Werewolf_Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult PlayerAchievements(int pid, bool json = false)
+        public JsonResult PlayerAchievements(long pid, bool json = false)
         {
             using (var DB = new WWContext())
             {
@@ -408,7 +408,7 @@ namespace Werewolf_Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult PlayerLockedAchievements(int pid, bool json = false)
+        public JsonResult PlayerLockedAchievements(long pid, bool json = false)
         {
             using (var DB = new WWContext())
             {
@@ -447,7 +447,7 @@ namespace Werewolf_Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult PlayerImage(int pid)
+        public JsonResult PlayerImage(long pid)
         {
             using (var db = new WWContext())
             {

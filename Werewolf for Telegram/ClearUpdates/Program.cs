@@ -85,7 +85,7 @@ namespace ClearUpdates
                     Api.DeleteMessageAsync(DevGroup, q.Message.MessageId);
                     return;
                 }
-                var id = int.Parse(q.Data);
+                var id = long.Parse(q.Data);
                 if (!Commands.TryGetValue(id, out var t))
                 {
                     Api.AnswerCallbackQueryAsync(q.Id, "Sorry, this flood isn't in my memory anymore! :(", true).Wait();
@@ -226,7 +226,7 @@ namespace ClearUpdates
                 mQueue.Enqueue(e.Update.Message);
         }
 
-        private static Dictionary<int, List<Message>> Commands = new Dictionary<int, List<Message>>();
+        private static Dictionary<long, List<Message>> Commands = new Dictionary<long, List<Message>>();
         private static Queue<Message> mQueue = new Queue<Message>();
 
 

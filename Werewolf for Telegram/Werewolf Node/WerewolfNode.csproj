@@ -161,11 +161,9 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\SpecialStrings.cs" />
     <Compile Include="Models\CustomGifData.cs" />
-    <Compile Include="Models\DayRole.cs" />
     <Compile Include="Models\GameInfo.cs" />
     <Compile Include="Models\IPlayer.cs" />
     <Compile Include="Models\Locale.cs" />
-    <Compile Include="Models\NightRole.cs" />
     <Compile Include="Models\PlayerRole.cs" />
     <Compile Include="Models\QuestionAsked.cs" />
     <Compile Include="Models\TcpAdminClasses.cs" />

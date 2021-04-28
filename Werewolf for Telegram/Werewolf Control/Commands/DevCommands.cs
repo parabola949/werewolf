@@ -114,7 +114,7 @@ namespace Werewolf_Control
         [Attributes.Command(Trigger = "moveachv", DevOnly = true)]
         public static void MoveAchv(Update update, string[] args)
         {
-            if (!int.TryParse(args[1], out int userid))
+            if (!long.TryParse(args[1], out long userid))
             {
                 Bot.Send("Command syntax: /moveachv USERID", update.Message.Chat.Id);
                 return;
@@ -732,7 +732,7 @@ namespace Werewolf_Control
         {
             using (var db = new WWContext())
             {
-                var search = int.Parse(args[1].Trim());
+                var search = long.Parse(args[1].Trim());
                 var p = db.Players.FirstOrDefault(x => x.TelegramId == search);
                 if (p != null)
                     Send($"User: {p.Name}\nUserName: @{p.UserName}", u.Message.Chat.Id);
@@ -741,7 +741,7 @@ namespace Werewolf_Control
         [Attributes.Command(Trigger = "getcommands", DevOnly = true)]
         public static void GetCommands(Update u, string[] args)
         {
-            var target = int.Parse(args[1]);
+            var target = long.Parse(args[1]);
             var reply = UpdateHandler.UserMessages[target].Messages.Aggregate("", (a, b) => a + "\n" + b.Command);
             Send(reply, u.Message.Chat.Id);
         }
@@ -926,12 +926,12 @@ namespace Werewolf_Control
             if (args.Length < 2 || String.IsNullOrEmpty(args[1]))
                 return;
             //now check for ids
-            var toBan = new List<int>();
-            var did = 0;
+            var toBan = new List<long>();
+            long did = 0;
             var banReason = "";
             foreach (var arg in args[1].Split(' '))
             {
-                if (int.TryParse(arg, out did))
+                if (long.TryParse(arg, out did))
                 {
                     toBan.Add(did);
                 }
@@ -953,7 +953,7 @@ namespace Werewolf_Control
                             player = new Player()
                             {
                                 Name = "Unknown User",
-                                TelegramId = uid,
+                                TelegramId = (int)uid, // APIV5 CAST
                             };
                             db.Players.Add(player);
                         }
@@ -983,8 +983,6 @@ namespace Werewolf_Control
         public static void RemoveBan(Update u, string[] args)
         {
 #if !BETA
-            var tosmite = new List<int>();
-
             foreach (var e in u.Message.Entities)
             {
                 switch (e.Type)
@@ -1035,7 +1033,7 @@ namespace Werewolf_Control
             {
                 foreach (var userid in args[1].Split(' '))
                 {
-                    if (!int.TryParse(userid, out int id)) continue;
+                    if (!long.TryParse(userid, out long id)) continue;
 
                     using (var db = new WWContext())
                     {
@@ -1344,8 +1342,8 @@ namespace Werewolf_Control
                 //                    return;
                 //                }
                 //#endif
-                int id = 0;
-                if (int.TryParse(args[1], out id))
+                long id = 0;
+                if (long.TryParse(args[1], out id))
                 {
                     //get the user from the database
                     using (var ww = new WWContext())
